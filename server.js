@@ -55,8 +55,9 @@ app.get('/results', (request, response) =>{
 		request_module ({url:`https://api.betterdoctor.com/2016-03-01/doctors?location=${lat}%2C${lng}%2C100&sort=distance-asc&skip=0&limit=${per_page}&user_key=6864ad983287baee8365ce0542f8c459`, json: true}, (error, res, drData) => {
 			// console.log(drData)
 			var parsedData = (drData);
+			var uid = parsedData.data[0].uid;
+			console.log(uid);
 			console.log(parsedData);
-			// console.log(parsedData.data[2].profile.image_url);
 		
 
 			response.render('results', {
@@ -64,12 +65,25 @@ app.get('/results', (request, response) =>{
 				latitude: lat,
 				longitude: lng,
 				parsedData: parsedData
+			
 			})
 		})
  	}).catch((errorMessage) => {//if not success - error message
 		console.log(errorMessage);
  	})
 });
+
+app.get('/:uid', (request, response)=>{
+	var uid = request.params.uid;
+	console.log(uid);
+	request_module ({url:`https://api.betterdoctor.com/2016-03-01/doctors/${uid}?user_key=6864ad983287baee8365ce0542f8c459`, json: true}, (error, res, drProfile) => {
+			// console.log(drData)
+			var parsedProfile = (drProfile);
+			console.log(parsedProfile);
+	});
+});
+
+
 app.post('/search', (request, response) =>{
 	var zip = request.body.zip_code;
 	var per_page = request.body.per_page;
